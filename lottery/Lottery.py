@@ -37,9 +37,9 @@ def get_lottery_data(start=2016001, end=2017019):
             index = 0
             for em in em_str:
                 if index == 0:
-                    data.lottery_data += em.contents[0];
+                    data.lottery_data += em.contents[0]
                 elif index < 7:
-                    data.lottery_data += ',' + em.contents[0];
+                    data.lottery_data += ',' + em.contents[0]
                 index += 1
             lottery_list.append(data)
     return lottery_list
@@ -61,7 +61,32 @@ def write_lottery_to_txt_file():
         file.close()
 
 
-write_lottery_to_txt_file()
+# 读文件数据
+def read_txt_file(start=3, end=15):
+    file_list = list()
+    for index in range(start, end):
+        file_list.append(str(2000 + index))
+    data_list = list()
+    for name in file_list:
+        file = open(name + '.txt', 'r')
+        while file:
+            line = file.readline()
+            if not line:
+                break
+            data = Data()
+            lottery_list = line.split('    ')
+            date = lottery_list[2].replace('\n', '')
+            data.date = date
+            data.year = date.split('-')[0]
+            data.date_num = lottery_list[0]
+            data.lottery_data = lottery_list[1].replace('|', ',')
+            data_list.append(data)
+        if file:
+            file.close()
+    return data_list
+
+for data_item in read_txt_file():
+    print(data_item.year, data_item.date_num, data_item.date, data_item.lottery_data)
 
 
 
