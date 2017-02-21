@@ -3,6 +3,7 @@ import codecs
 from bs4 import BeautifulSoup
 
 
+# 彩票实体类
 class Data(object):
     year = ''
     date = ''
@@ -10,7 +11,7 @@ class Data(object):
     lottery_data = ''
 
 
-# http://baidu.lecai.com/lottery/draw/list/50?type=range&start=2015000&end=2017019
+# 得到彩票数据
 def get_lottery_data(start=2016001, end=2017019):
     lottery_list = list()
     params = {'type': 'range', 'start': start, 'end': end}
@@ -44,18 +45,23 @@ def get_lottery_data(start=2016001, end=2017019):
     return lottery_list
 
 
-old_year = ''
-file = None
-for lottery in get_lottery_data():
-    if lottery.year != old_year:
-        old_year = lottery.year
-        if file:
-            file.close()
-        file = codecs.open(lottery.year + ".txt", 'w', 'utf-8')
-    else:
-        file.write(lottery.date_num + "\t" + lottery.date + "\t" + lottery.lottery_data + "\r\n")
-if file:
-    file.close()
+# 将彩票数据写到txt文件，文件名由年来决定
+def write_lottery_to_txt_file():
+    old_year = ''
+    file = None
+    for lottery in get_lottery_data():
+        if lottery.year != old_year:
+            old_year = lottery.year
+            if file:
+                file.close()
+            file = codecs.open(lottery.year + ".txt", 'w', 'utf-8')
+        else:
+            file.write(lottery.date_num + "\t" + lottery.date + "\t" + lottery.lottery_data + "\r\n")
+    if file:
+        file.close()
+
+
+write_lottery_to_txt_file()
 
 
 
